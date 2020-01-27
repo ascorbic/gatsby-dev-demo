@@ -2,12 +2,12 @@ require("dotenv").config();
 
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
-    author: `Kyle Mathews`,
-    description: `A starter blog demonstrating what Gatsby can do.`,
-    siteUrl: `https://gatsby-starter-blog-demo.netlify.com/`,
+    title: `My DEV posts`,
+    author: `Matt Kane`,
+    description: `A demo of using dev.to as a source for a Gatsby blog`,
+    siteUrl: `https://gatsby-dev-demo.netlify.com/`,
     social: {
-      twitter: `kylemathews`,
+      twitter: `ascorbic`,
     },
   },
   plugins: [
