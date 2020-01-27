@@ -4,45 +4,33 @@ const { createFilePath } = require(`gatsby-source-filesystem`)
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
 
-  const blogPost = path.resolve(`./src/templates/blog-post.js`)
-  const result = await graphql(
-    `
-      {
-        allMarkdownRemark(
-          sort: { fields: [frontmatter___date], order: DESC }
-          limit: 1000
-        ) {
-          edges {
-            node {
-              fields {
-                slug
-              }
-              frontmatter {
-                title
-              }
-            }
-          }
+  const result = await graphql(`
+    query DevArticleQuery {
+      allDevArticle(filter: { childMarkdownRemark: { id: { ne: null } } }) {
+        nodes {
+          slug
         }
       }
-    `
-  )
+    }
+  `)
 
   if (result.errors) {
     throw result.errors
   }
 
   // Create blog posts pages.
-  const posts = result.data.allMarkdownRemark.edges
+  const blogPost = path.resolve(`./src/templates/blog-post.js`)
 
-  posts.forEach((post, index) => {
-    const previous = index === posts.length - 1 ? null : posts[index + 1].node
-    const next = index === 0 ? null : posts[index - 1].node
-
+  const posts = result.data.allDevArticle.nodes
+  posts.forEach((node, index) => {
+    const previous = index === posts.length - 1 ? null : posts[index + 1]
+    const next = index === 0 ? null : posts[index - 1]
+    
     createPage({
-      path: post.node.fields.slug,
+      path: `posts/${node.slug}`,
       component: blogPost,
       context: {
-        slug: post.node.fields.slug,
+        slug: node.slug,
         previous,
         next,
       },
@@ -50,15 +38,3 @@ exports.createPages = async ({ graphql, actions }) => {
   })
 }
 
-exports.onCreateNode = ({ node, actions, getNode }) => {
-  const { createNodeField } = actions
-
-  if (node.internal.type === `MarkdownRemark`) {
-    const value = createFilePath({ node, getNode })
-    createNodeField({
-      name: `slug`,
-      node,
-      value,
-    })
-  }
-}

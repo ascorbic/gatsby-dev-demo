@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 module.exports = {
   siteMetadata: {
     title: `Gatsby Starter Blog`,
@@ -10,12 +12,11 @@ module.exports = {
   },
   plugins: [
     {
-      resolve: `gatsby-source-filesystem`,
+      resolve: `gatsby-source-dev`,
       options: {
-        path: `${__dirname}/content/blog`,
-        name: `blog`,
-      },
-    },
+          apiKey: process.env.GATSBY_DEV_API_KEY
+      }
+  },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
